@@ -24,7 +24,6 @@ class _Session(object):
     def __send_api_request(self, params):
         try:
             resp = self._session.post(self.API_URL, json=params).json()
-            print(resp)
         except (JSONDecodeError, requests.ConnectionError) as e:
             raise ComagicException({"code": 502, "message": f"{e}"})
         if "error" in resp:
@@ -33,14 +32,14 @@ class _Session(object):
 
 
     def _send_api_request(self, params, counter=0):
-        if counter > 3:
-            raise ComagicException({"code": -32001, "message": "Invalid login or password"})
         try:
+            counter += 1
             return self.__send_api_request(params)
         except ComagicException as e:
-            if "-32001" in e:
-                counter+=1
-                self.access_token = self._create_access_token
+            if counter > 3:
+                raise ComagicException({"code": -32001, "message": "Invalid login or password"})
+            if "-32001" in str(e):
+                self.access_token = self._create_access_token()
             return self._send_api_request(params, counter)
 
 
@@ -71,7 +70,7 @@ class _Session(object):
 		}
         print(default_params)
         if date_form and date_to:
-            default_params.update({"date_from": date_from, "date_till": date_to})
+            default_params.update({"date_from": date_form, "date_till": date_to})
         if filter:
             default_params.update({"filter": filter})
         if user_id:
