@@ -74,7 +74,6 @@ class _Session(object):
 				"access_token": self.access_token
 			}
 		}
-        print(default_params)
         if date_form and date_to:
             default_params.update({"date_from": date_form, "date_till": date_to})
         if filter:
