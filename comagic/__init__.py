@@ -11,7 +11,7 @@ VALID_ENDPOINTS = (
     "campaigns","campaign_available_phone_numbers","campaign_available_redirection_phone_numbers",
     "campaign_parameter_weights", "sites", "site_blocks", "call_legs_report", "goals_report",
     "chats_report", "chat_messages_report", "offline_messages_report", "visitor_sessions_report",
-    "financial_call_legs_report", "tags", "employees", "customers", "campaign_daily_stat",
+    "financial_call_legs_report", "tags", "employees", "customers", "campaign_daily_stat", "customer_users",
 )
 
 VALID_METHODS = (
