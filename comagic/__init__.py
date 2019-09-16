@@ -98,9 +98,13 @@ class _Session(object):
 
 
 class Comagic(object):
-    def __init__(self, login="", password="", token="", api_url="https://dataapi.comagic.ru/v2.0"):
+    def __init__(self, login="", password="", token="", uis=False):
         self.login = login
         self.password = password
+        if uis:
+            api_url = "https://dataapi.uis.ru/v2.0"
+        else:
+            api_url = "https://dataapi.comagic.ru/v2.0"
         self._session = _Session(login, password, token, api_url)
         self.access_token = self._session.access_token
 
@@ -148,4 +152,5 @@ class _Request(object):
             filter=filter,
             data=data,
         )
+
 
