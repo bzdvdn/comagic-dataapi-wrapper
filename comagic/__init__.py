@@ -102,7 +102,7 @@ class Comagic(object):
         self.login = login
         self.password = password
         if uis:
-            api_url = "https://dataapi.uis.ru/v2.0"
+            api_url = "https://dataapi.uiscom.ru/v2.0"
         else:
             api_url = "https://dataapi.comagic.ru/v2.0"
         self._session = _Session(login, password, token, api_url)
@@ -152,5 +152,6 @@ class _Request(object):
             filter=filter,
             data=data,
         )
+
 
 
