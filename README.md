@@ -6,21 +6,9 @@ Install using `pip`...
 
     pip install comagic-wrapper
 
-#Doc
-comagic doc - https://www.comagic.ru/support/api/data-api/
-
-support full enpoints:
-```python
-(
-    "calls_report", "communications_report", "virtual_numbers", "available_virtual_numbers",
-    "sip_line_virtual_numbers", "sip_lines", "sip_line_password", "scenarios", "media_files",
-    "campaigns","campaign_available_phone_numbers","campaign_available_redirection_phone_numbers",
-    "campaign_parameter_weights", "sites", "site_blocks", "call_legs_report", "goals_report",
-    "chats_report", "chat_messages_report", "offline_messages_report", "visitor_sessions_report",
-    "financial_call_legs_report", "tags", "employees", "customers", "campaign_daily_stat",
-)
-```
-
+#Documentation
+https://www.comagic.ru/support/api/data-api/
+-
 
 # Usage
 
@@ -33,6 +21,12 @@ or
 client = Comagic(token="<token>")
 
 ```
+# Customers
+```python
+# doc - https://www.comagic.ru/support/api/data-api/Partners/#get_customer_user
+customers = client.customer_users.get(limit=1000, offset=0, field=[], filter={}, sort=[])
+```
+
 # Sites
 ```python
 # list of sites
@@ -107,11 +101,12 @@ account = client.account.get()
 ```python
 # get virtual numbers
 # doc - https://www.comagic.ru/support/api/data-api/vn/get_virtual_numbers/
-numbers = client.virtual_numbers.get(user_id='<user_id> if needed', limit=10, offset=0, fields=[], sort={})
+numbers = client.virtual_numbers.get(user_id='<user_id> if needed', limit=10, offset=0, fields=[], sort=[])
 
 # get available virtual numbers
 # doc - https://www.comagic.ru/support/api/data-api/vn/get_available_virtual_numbers/
-available_virtual_numbers = client.available_virtual_numbers.get(user_id='<user_id> if needed', limit=10, offset=0, fields=[], sort={})
+available_virtual_numbers = client.available_virtual_numbers.get(user_id='<user_id> if needed', limit=10, offset=0
+, fields=[], sort=[])
 
 # enable virtual number
 # doc - https://www.comagic.ru/support/api/data-api/vn/enable_virtual_numbers/
@@ -121,3 +116,186 @@ enable = client.virtual_numbers.enable(user_id='<user_id> if needed', virtual_ph
 # doc - https://www.comagic.ru/support/api/data-api/vn/disable_virtual_numbers/
 disable = client.virtual_numbers.disable(user_id='<user_id> if needed', virtual_phone_number='number')
 ```
+
+# Tags
+```python
+# doc - https://www.comagic.ru/support/api/data-api/Tags/
+
+# create tag
+tag = client.tags.create(user_id='<user_id> if needed', name='<tag_name>')
+
+# update tag
+updated_tag = client.tags.update(user_id='<user_id> if needed', name='<tag_name>', id='<tag_id>')
+
+# delete tag
+deleted_tag = client.tags.delete(user_id='<user_id> if needed', id='<tag_id>')
+
+# get tags
+tag_list = client.tags.get(user_id='<user_id> if needed', limit=10, offset=0, fields=[], sort=[])
+
+# set sales tag
+sale_tag = client.tag_sales.set(
+    user_id='<user_id> if needed',
+    communication_id='<id>',
+    communication_type='<type>',
+    date_time='2019-08-09',
+    transaction_value=123,
+    comment='<comment>'
+)
+
+# set communication tag
+communication_tag = client.tag_communications.set(
+    user_id='<user_id> if needed',
+    communication_id='<id>',
+    communication_type='<type>',
+    tag_id='<tag_id>'
+)
+
+# unset communication tag
+unset_tag = client.tag_communications.unset(
+    user_id='<user_id> if needed',
+    communication_id='<id>',
+    communication_type='<type>',
+    tag_id='<tag_id>'
+)
+```
+# Campaigns
+```python
+# Doc - https://www.comagic.ru/support/api/data-api/Campaigns/
+
+# get campaigns
+campaigns = client.campaigns.get(user_id='<user_id> if needed', limit=10, offset=0, fields=[], sort=[])
+
+# delete campaign
+deleted = client.campaigns.get(user_id='<user_id> if needed', id='<campaign_id>')
+
+# get campaign available phone numbers
+av_campaign_numbers = client.campaign_available_phone_numbers.get(user_id='<user_id> if needed', limit=10, offset=0
+, fields=[], sort=[])
+
+# get campaign available redirection phone numbers
+redirect_campaign_numbers = client.campaign_available_redirection_phone_numbers.get(
+    user_id='<user_id> if needed',
+    limit=10, offset=0, fields=[], sort=[])
+
+# create campaign
+campaign = client.campaigns.create('<campaign params>') # create kwargs params like in doc
+
+# update campaign
+campaign = client.campaigns.update('<campaign params>') # create kwargs params like in doc
+
+# get campaign weight parameter
+campaign_weight = client.campaign_parameter_weights.get(user_id='<user_id> if needed', limit=10, offset=0, fields=[], sort=[])
+
+# update campaign weight parameter
+update_weight_params = client.campaign_parameter_weights.update('<weight params>')
+``` 
+# Reports
+```python
+# Doc - https://www.comagic.ru/support/api/data-api/Reports/
+
+# communications report
+communications_report = client.communications_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# call report
+calls_report = client.call_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# CDR call report
+call_legs_report = client.call_legs_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# goals report
+goals_report = client.goals_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# chat report
+chat_report = client.chat_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# get chat messages
+messages = client.chat_messages_report.get(
+    user_id='<user_id> if needed',
+    chat_id = '<chat_id>',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# offline messages report
+offline_messages_report = client.offline_messages_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# session report
+visitor_sessions_report = client.visitor_sessions_report.get(
+    user_id='<user_id> if needed',
+    date_from='2019-19-10',
+    date_to='2019-19-10',
+    limit=10000,
+    offset=0,
+    sort=[],
+    fields=[],
+)
+
+# financial_call_legs_report
+financial_call_legs_report = client.financial_call_legs_report.get(
+     user_id='<user_id> if needed',
+     date_from='2019-19-10',
+     date_to='2019-19-10',
+     limit=10000,
+     offset=0,
+     sort=[],
+     fields=[],
+ )
+```
+# TODO
+* more examples
+* support full methods
+* tests
+
+
+

@@ -34,9 +34,11 @@ VALID_ENDPOINTS = (
     "customers",
     "campaign_daily_stat",
     "customer_users",
+    "tag_communications",
+    "tag_sales",
 )
 
-VALID_METHODS = ("get", "delete", "create", "update", "upload", "enable", "disable")
+VALID_METHODS = ("get", "delete", "create", "update", "upload", "enable", "disable", "set", "unset")
 
 
 class _Session(object):
@@ -112,7 +114,8 @@ class _Session(object):
         if user_id:
             default_params["params"].update({"user_id": user_id})
         if kwargs:
-            default_params["params"].update(**kwargs)
+            params = {key: value for key, value in kwargs.items() if value or isinstance(value, (bool, int))}
+            default_params["params"].update(**params)
         # print(default_params)
         return self._send_api_request(default_params)
 
@@ -178,9 +181,10 @@ class _Request(object):
             raise ValueError(f"{method_name} - invalid method, must be in {VALID_METHODS}")
         return _Request(self._api, {"endpoint": self._params, "method": method_name})
 
-    def __call__(self, user_id: any = None, date_from: str = '', date_to: str = '', fields: list = [], **kwargs) -> any:
-        if not isinstance(filter, dict) or not isinstance(data, dict) or not isinstance(fields, list):
-            raise ValueError("filter or data must be a dict")
+    def __call__(self, user_id: any = None, date_from: str = '', date_to: str = '',
+                 fields: list = [], sort: list = [], **kwargs) -> any:
+        if not isinstance(fields, list) or not isinstance(sort, list):
+            raise ValueError("fields or sort must be instance of list")
 
         return self._api._session._get_endpoint(
             endpoint=self._params["endpoint"],
