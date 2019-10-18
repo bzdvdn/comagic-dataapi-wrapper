@@ -36,7 +36,7 @@ VALID_ENDPOINTS = (
     "customer_users",
 )
 
-VALID_METHODS = ("get", "delete", "create", "update", "upload")
+VALID_METHODS = ("get", "delete", "create", "update", "upload", "enable", "disable")
 
 
 class _Session(object):
@@ -91,18 +91,14 @@ class _Session(object):
         self.comagic_app_id = resp["app_id"]
         return resp["access_token"]
 
-    def _get_endpoint(self, method: str, endpoint: str,
-                      user_id: any = None, date_form: str = "", date_to: str = "",
-                      filter: dict = {}, data: dict = {}, limit: int = None) -> any:
+    def _get_endpoint(self, method: str, endpoint: str, user_id: any = None,
+                      date_form: str = "", date_to: str = "", **kwargs) -> any:
         """
         :param method: str
         :param endpoint: str
         :param user_id: any (int or None)
         :param date_form: str
         :param date_to: str
-        :param filter: dict filter data for comagic
-        :param limit: int
-        :param data: dict
         :return: any
         """
         default_params = {
@@ -113,14 +109,10 @@ class _Session(object):
         }
         if date_form and date_to:
             default_params["params"].update({"date_from": date_form, "date_till": date_to})
-        if filter:
-            default_params["params"].update({"filter": filter})
         if user_id:
             default_params["params"].update({"user_id": user_id})
-        if data:
-            default_params["params"].update(**data)
-        if limit:
-            default_params['limit'] = limit
+        if kwargs:
+            default_params["params"].update(**kwargs)
         # print(default_params)
         return self._send_api_request(default_params)
 
@@ -186,20 +178,18 @@ class _Request(object):
             raise ValueError(f"{method_name} - invalid method, must be in {VALID_METHODS}")
         return _Request(self._api, {"endpoint": self._params, "method": method_name})
 
-    def __call__(self, user_id: any = None, date_from: str = "", date_to: str = "",
-                 filter: dict = {}, data: dict = {}, limit: int = None) -> any:
-        if not isinstance(filter, dict) or not isinstance(data, dict):
+    def __call__(self, user_id: any = None, date_from: str = '', date_to: str = '', fields: list = [], **kwargs) -> any:
+        if not isinstance(filter, dict) or not isinstance(data, dict) or not isinstance(fields, list):
             raise ValueError("filter or data must be a dict")
 
         return self._api._session._get_endpoint(
             endpoint=self._params["endpoint"],
             method=self._params["method"],
             user_id=user_id,
-            date_form=date_from,
+            date_from=date_from,
             date_to=date_to,
-            filter=filter,
-            data=data,
-            limit=limit,
+            fields=fields,
+            **kwargs
         )
 
 
