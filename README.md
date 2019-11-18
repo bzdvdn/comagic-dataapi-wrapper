@@ -14,7 +14,7 @@ https://www.comagic.ru/support/api/data-api/
 
 ```python
 from comagic import Comagic
-client = Comagic("<login>", "<password>") # init retail api
+client = Comagic("<login>", "<password>") # init comagic wrapper
 
 or
 
